@@ -3112,7 +3112,7 @@ bool ScriptExt::IsValidFriendlyTarget(TeamClass* pTeam, int group, TechnoClass* 
 	{
 		auto pType = target->GetTechnoType();
 		// Friendly?
-		if (isFriendly ^ pTeam->Owner->IsAlliedWith(target->Owner)) 
+		if (isFriendly != pTeam->Owner->IsAlliedWith(target->Owner)) 
 			return false;
 		// Only aircraft team can follow friendly aircraft
 		if (isSelfAircraft) 
@@ -3120,7 +3120,7 @@ bool ScriptExt::IsValidFriendlyTarget(TeamClass* pTeam, int group, TechnoClass* 
 		else if (pType->ConsideredAircraft)
 			return false;
 		// If team is naval, only follow friendly naval
-		if (isSelfNaval ^ pType->Naval) 
+		if (isSelfNaval != pType->Naval) 
 			return false;
 		// No underground
 		if (target->InWhichLayer() == Layer::Underground) 
@@ -3269,6 +3269,8 @@ void ScriptExt::RallyUnitInMap(TeamClass* pTeam, int nArg)
 
 bool ScriptExt::IsValidRallyTarget(TeamClass* pTeam, FootClass* pFoot, int nType)
 {
+	if (nType == 0) // Anything
+		return true;
 	auto type = pFoot->WhatAmI();
 	auto pTechnoType = pFoot->GetTechnoType();
 	auto pAircraftType = abstract_cast<AircraftTypeClass*>(pTechnoType);
@@ -3278,8 +3280,6 @@ bool ScriptExt::IsValidRallyTarget(TeamClass* pTeam, FootClass* pFoot, int nType
 
 	switch (nType)
 	{
-	case 0: // Anything
-		return true;
 	case 1: // Infantry
 		return type == AbstractType::Infantry;
 	case 2: // Vehicles
@@ -3303,6 +3303,17 @@ bool ScriptExt::IsValidRallyTarget(TeamClass* pTeam, FootClass* pFoot, int nType
 				if (pEntry.Type && pEntry.Type == pTechnoType)
 					return true;
 			}
+		}
+		return false;
+	case 8: // Different type in taskforce
+		if (pTaskforce)
+		{
+			for (auto const& pEntry : pTaskforce->Entries)
+			{
+				if (pEntry.Type && pEntry.Type == pTechnoType)
+					return false;
+			}
+			return false;
 		}
 		return false;
 	default:
@@ -3474,12 +3485,6 @@ void ScriptExt::VariablesHandler(TeamClass* pTeam, PhobosScripts eAction, int nA
 		VariableBinaryOperationHandler<true, true, operation_or>(pTeam, nLoArg, nHiArg); break;
 	case PhobosScripts::GlobalVariableAndByGlobal:
 		VariableBinaryOperationHandler<true, true, operation_and>(pTeam, nLoArg, nHiArg); break;
-	case PhobosScripts::ChangeTeamGroup:
-		TeamMemberSetGroup(pTeam, nArg); break;
-	case PhobosScripts::DistributedLoading:
-		DistributedLoadOntoTransport(pTeam, nArg == 0); break;
-	case PhobosScripts::FollowFriendlyByGroup:
-		FollowFriendlyByGroup(pTeam, nArg); break;
 	}
 }
 
