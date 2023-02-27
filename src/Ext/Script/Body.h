@@ -200,6 +200,15 @@ public:
 	static TechnoClass* FindBestObject(TechnoClass *pTechno, int method, int calcThreatMode, bool pickAllies, int attackAITargetType, int idxAITargetTypeItem);
 	static void UnregisterGreatSuccess(TeamClass * pTeam);
 
+	static void TeamMemberSetGroup(TeamClass* pTeam, int group);
+	static void DistributedLoadOntoTransport(TeamClass* pTeam, int type);
+	static void FollowFriendlyByGroup(TeamClass* pTeam, int group);
+	static void RallyUnitInMap(TeamClass* pTeam, int nArg);
+
+	static bool IsValidFriendlyTarget(TeamClass* pTeam, int group, TechnoClass* target, bool isSelfNaval, bool isSelfAircraft, bool isFriendly);
+	static bool StopTeamMemberMoving(TeamClass* pTeam);
+	static bool IsValidRallyTarget(TeamClass* pTeam, FootClass* pFoot, int nType);
+
 	static void Mission_Attack_List(TeamClass *pTeam, bool repeatAction, int calcThreatMode, int attackAITargetType);
 	static void Mission_Attack_List1Random(TeamClass *pTeam, bool repeatAction, int calcThreatMode, int attackAITargetType);
 	static void Mission_Move_List(TeamClass *pTeam, int calcThreatMode, bool pickAllies, int attackAITargetType);
