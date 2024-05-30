@@ -200,18 +200,6 @@ void ScriptExt::ProcessAction(TeamClass* pTeam)
 	case PhobosScripts::RandomSkipNextAction:
 		ScriptExt::SkipNextAction(pTeam, -1);
 		break;
-	case PhobosScripts::ChangeTeamGroup:
-		ScriptExt::TeamMemberSetGroup(pTeam, argument); 
-		break;
-	case PhobosScripts::DistributedLoading:
-		ScriptExt::DistributedLoadOntoTransport(pTeam, argument); 
-		break;
-	case PhobosScripts::FollowFriendlyByGroup:
-		ScriptExt::FollowFriendlyByGroup(pTeam, argument); 
-		break;
-	case PhobosScripts::RallyUnitWithSameGroup:
-		ScriptExt::RallyUnitInMap(pTeam, argument);
-		break;
 	case PhobosScripts::StopForceJumpCountdown:
 		// Stop Timed Jump
 		ScriptExt::Stop_ForceJump_Countdown(pTeam);
@@ -2878,6 +2866,7 @@ void ScriptExt::DistributedLoadOntoTransport(TeamClass* pTeam, int nArg)
 	{
 		bool canProceed = true;
 		auto pCell = pFoot->GetCell();
+		auto coord = pCell->GetCoords();
 
 		for (auto pUnit = pTeam->FirstUnit; pUnit; pUnit = pUnit->NextTeamMember)
 		{
@@ -2898,7 +2887,7 @@ void ScriptExt::DistributedLoadOntoTransport(TeamClass* pTeam, int nArg)
 			}
 			else
 			{
-				pUnit->MoveTo(&pCell->GetCoords());
+				pUnit->MoveTo(&coord);
 				canProceed = false;
 			}
 		}
@@ -2956,9 +2945,10 @@ void ScriptExt::DistributedLoadOntoTransport(TeamClass* pTeam, int nArg)
 	else if (nType == T_AVGPOS)
 	{
 		auto pCell = pFoot->GetCell();
+		auto coord = pCell->GetCoords();
 		for (auto pUnit = pTeam->FirstUnit; pUnit; pUnit = pUnit->NextTeamMember)
 		{
-			pUnit->MoveTo(&pCell->GetCoords());
+			pUnit->MoveTo(&coord);
 		}
 		pTeam->GuardAreaTimer.Start(5);
 		pExt->GenericStatus = R_WAIT_POS;

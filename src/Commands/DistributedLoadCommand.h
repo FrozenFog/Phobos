@@ -9,6 +9,7 @@
 #include <Utilities/Debug.h>
 #include <Ext/Techno/Body.h>
 #include <Ext/TechnoType/Body.h>
+#include <EventClass.h>
 
 #define TECHNO_IS_ALIVE(tech) (!tech->InLimbo && tech->Health > 0)
 
@@ -40,6 +41,7 @@ public:
 	{
 		const int T_NO_GATHER = 0, T_COUNTDOWN = 1, T_AVGPOS = 2;
 		/*
+		* used for Script, ignore these constant when used as HotKey Command
 		type 0: stop member from gathering and begin load now
 		type 1: don't stop, maintain previous action, countdown LOWORD seconds then begin load
 		type 2: don't stop, gether around first member's position range LOWORD then begin load
@@ -145,9 +147,14 @@ public:
 					// Get on the car
 					if (pPassenger->GetCurrentMission() != Mission::Enter)
 					{
-						pPassenger->QueueMission(Mission::Enter, true);
-						pPassenger->SetTarget(nullptr);
-						pPassenger->SetDestination(targetTransport, false);
+						TargetClass tTransport(targetTransport);
+						TargetClass tThis(pPassenger);
+						TargetClass tEmpty(nullptr);
+						EventClass pEvent(pPassenger->Owner->ArrayIndex, tThis, Mission::Enter, tEmpty, tTransport, tEmpty);
+						EventClass::AddEvent(pEvent);
+						//pPassenger->QueueMission(Mission::Enter, true);
+						//pPassenger->SetTarget(nullptr);
+						//pPassenger->SetDestination(targetTransport, false);
 						transportSpaces[targetTransport] -= pPassengerType->Size;
 						passengerLoading = true;
 					}

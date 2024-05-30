@@ -5,10 +5,14 @@
 #include "QuickSave.h"
 #include "DamageDisplay.h"
 #include "SpreadAttack.h"
+#include "SpreadAttackGround.h"
 #include "HoldPosition.h"
 #include "DistributedLoadCommand.h"
+#include "DiminishSelection.h"
 #include "FrameByFrame.h"
 #include "FrameStep.h"
+#include "CancelTeam.h"
+#include "ExecuteLuaFunction.h"
 
 DEFINE_HOOK(0x533066, CommandClassCallback_Register, 0x6)
 {
@@ -19,8 +23,12 @@ DEFINE_HOOK(0x533066, CommandClassCallback_Register, 0x6)
 	MakeCommand<QuickSaveCommandClass>();
 	MakeCommand<DamageDisplayCommandClass>();
 	MakeCommand<SpreadAttackCommandClass>();
+	MakeCommand<SpreadAttackGroundCommandClass>();
 	MakeCommand<HoldPositionCommandClass>();
 	MakeCommand<DistributedLoadCommandClass>();
+	MakeCommand<DiminishSelectionCommandClass>();
+	MakeCommand<ExecuteLuaFunction>();
+	MakeCommand<CancelTeam>();
 
 	MakeCommand<FrameByFrameCommandClass>();
 	MakeCommand<FrameStepCommandClass<1>>(); // Single step in
