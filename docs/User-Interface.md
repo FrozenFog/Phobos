@@ -637,6 +637,11 @@ In `rulesmd.ini`:
 SelectCapturedKeyEnabled=false    ; boolean
 ```
 
+### `[ ]` Balanced Load
+
+- One-click balanced loading: evenly distributes the selected objects among the selected transports.
+- For localization add `TXT_BALANCED_LOAD` and `TXT_BALANCED_LOAD_DESC` into your `.csf` file.
+
 ## Loading screen
 
 - PCX files can now be used as loadscreen images.
